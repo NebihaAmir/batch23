@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="24243684-619a-4bff-b799-469318ad302e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="practice3Flow" doc:id="753abc63-98a1-496d-aee9-97b204e9a5de" >
+		<http:listener doc:name="Listener" doc:id="cf248a7a-ff50-4ea3-9caf-2db1e88fa162" path="/demo" config-ref="HTTP_Listener_config"/>
+		<set-variable value="#[attributes.queryParams.bmi]" doc:name="Set Variable" doc:id="22b371ec-35ec-4b65-8391-dfaa6587734d" variableName="bmi"/>
+		<ee:transform doc:name="Transform Message" doc:id="2045a877-2da4-438f-93d1-d66655624a22" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+
+
+var bmi= attributes.queryParams.bmi
+
+---
+if (bmi>=18.5 == bmi<=24.9)
+{
+	return: "you are in normal weight"
+}
+else if ( bmi < 18.5)
+
+{
+	return: "you are underweight"
+
+	}
+	else if (bmi >=25 == bmi <=29.9)
+	{
+		return: "you are overweight"
+		
+	}
+	else if (bmi >=30)
+	{
+		return: "obese"
+		}
+		
+		else {return: "unkown" 
+			
+		}
+
+
+
+//Underweight = <18.5
+//Normal weight = 18.5–24.9
+//Overweight = 25–29.9
+//Obesity = BMI of 3
+
+
+
+
+
+
+
+
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="bb4d75f6-e2df-4dd1-a778-468f53fc323d" />
+	</flow>
+</mule>
