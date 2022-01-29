@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="SELECT-DATA" doc:id="d43d511d-3fdc-4182-8859-7f61cb05a231" >
+		<http:listener doc:name="SELSECT" doc:id="a00a22b5-ba8b-4e8d-ac59-4f2952b0cf6b" config-ref="HTTP" path="/GET"/>
+		<db:select doc:name="Select" doc:id="b6bc3dc5-69ab-4ae2-8904-d870c58691da" config-ref="DATA-BASE">
+			<db:sql ><![CDATA[SELECT * FROM tb_product;]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="bfb37acb-72d1-44bc-b69e-5907c2e3f4e9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="BULK-UPDAT" doc:id="9c13ddb3-4a69-4e9c-bbcf-e7e7f85bb66d" >
+		<http:listener doc:name="UPDATE" doc:id="7b2c46a2-1d02-47ce-81ec-eba4827bf585" path="/UPDATE" config-ref="HTTP"/>
+		<db:bulk-update doc:name="Bulk update" doc:id="1c17e8fe-d0ae-47f7-aa06-7bfa920cea5f" config-ref="DATA-BASE">
+			<db:sql ><![CDATA[update tb_product set product_name = :product_name, category_id = :category_id,
+ description = :description, video_url  = :video_url, price = :price where id = :id]]></db:sql>
+		</db:bulk-update>
+		<set-payload value="SUCCESSFULLY    DATA   UPDATE !" doc:name="Set Payload" doc:id="7806c1db-8582-4d99-a24c-20a63fdcfc9a" />
+	</flow>
+	<flow name="BULK-DELETE" doc:id="a0149a59-5a05-4554-adc5-0984a8846f2a" >
+		<http:listener doc:name="DELETE" doc:id="b922fcd7-cc03-4b60-a9d0-5352dea05f9b" config-ref="HTTP" path="/DELETE"/>
+		<db:bulk-delete doc:name="Bulk delete" doc:id="cd25034b-2cc7-4fcf-b519-b00c14732e18" config-ref="DATA-BASE">
+			<db:bulk-input-parameters ><![CDATA[#[payload map{
+	id: $.id
+}]]]></db:bulk-input-parameters>
+			<db:sql ><![CDATA[Delete from tb_product  where id=:id;
+]]></db:sql>
+		</db:bulk-delete>
+		<set-payload value=" DATA  DELETED !!" doc:name="Set Payload" doc:id="2e49e9e1-c2dd-49f7-b4e0-1c112bc070d9" />
+	</flow>
+</mule>
