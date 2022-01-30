@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="groupdFlow" doc:id="f9209339-bb65-4bee-91de-25740323ccc3" >
+		<http:listener doc:name="Listener" doc:id="d7fe5e68-c805-4e71-9ac5-10a51583a57e" config-ref="HTTP_Listener_config" path="/putproducts"/>
+		<ee:transform doc:name="Transform Message" doc:id="889824d9-84cf-43cb-8f1b-d4063735afcb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+ payload map {
+productid:$.productid,
+categoryid:$.categoryid,
+name:$.name,
+description:$.description,
+video_url:$.video_url,
+price:$.price	
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:bulk-update doc:name="Bulk update" doc:id="34fd2758-b29b-4523-a951-638ca3cfaded" config-ref="Database_Config">
+			<db:sql ><![CDATA[update products set productid =:productid,categoryid = :categoryid,name=:name,
+description = :description, video_url  = :video_url, price = :price where productid = :productid]]></db:sql>
+		</db:bulk-update>
+	</flow>
+	<flow name="groupdFlow1" doc:id="d746c653-f1a7-4c53-9e90-ccd661c783f8" >
+		<http:listener doc:name="Listener" doc:id="7f4213d8-d154-4a79-a44b-db83821f7399" config-ref="HTTP_Listener_config" path="/deleteproducts"/>
+		<ee:transform doc:name="Transform Message" doc:id="469a7002-fec6-42e6-a6fc-8c0fefdb0fde" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:bulk-delete doc:name="Bulk delete" doc:id="bcc165bb-d3ff-4a05-a5a5-1d5874495e51" config-ref="Database_Config">
+			<db:sql ><![CDATA[delete from products where productid =:productid]]></db:sql>
+		</db:bulk-delete>
+	</flow>
+</mule>
