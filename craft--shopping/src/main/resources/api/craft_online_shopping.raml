@@ -1,0 +1,85 @@
+#%RAML 1.0
+title: craft-online-shopping
+
+uses:
+  lib: library.raml
+   
+/users:
+  post:
+    body:
+      application/json:  
+       type:  lib.userType  
+       example: !include examples/user.raml
+
+
+          
+  type:
+    lib.postres:
+      examplereference1:
+           {
+              "uid": 2345
+           }
+
+    is:    
+      -  lib.errorMessage         
+
+/products:
+  get:
+    responses:
+      200:
+        body:
+          application/json:  
+            type: lib.productType []      
+            example: !include examples/products.raml
+
+
+
+    is:
+      - lib.errorMessage        
+
+     
+  /{productid}:   
+    get:   
+      responses:
+        200:
+          body:
+            application/json:   
+              type: lib.productType         
+              example: !include examples/product.raml
+
+      is:
+        - lib.errorMessage       
+                
+/order:
+  post:
+    body:
+      application/json:
+        type: lib.ordertype
+        example: !include examples/order.raml
+         
+ 
+
+    
+  type:
+    lib.postres:
+      examplereference1:
+        {
+          "message": "Order Placed "
+        }
+    is:
+      - lib.errorMessage        
+   
+
+/category:      
+  get:
+    responses:  
+      200:
+        body:
+          application/json:
+            type: lib.categorytype[]
+            example: !include examples/category.raml
+              
+
+
+
+    
