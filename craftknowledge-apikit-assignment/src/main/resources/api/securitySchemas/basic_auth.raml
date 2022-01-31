@@ -1,0 +1,31 @@
+#%RAML 1.0 SecurityScheme
+type: Basic Authentication
+description: This is for basic authentication
+describedBy:
+    headers:
+      Authorization:
+        type: string
+        description: the user has to be authrized to send request
+    queryParameters:
+      username:
+        type: string
+        description: user has to send valid username
+        required: false
+      password:
+        type: string
+        description: user has to send valid password
+        required: false
+    responses:
+      401:
+        body:
+          application/json:
+            example:
+              !include ../examples/responses/401.json
+      403:
+        body:
+          application/json:
+            example:
+             !include ../examples/responses/403.json
+        
+
+      

@@ -1,0 +1,31 @@
+#%RAML 1.0 SecurityScheme
+type: OAuth 2.0
+description: This is OAuth 1.0 security
+describedBy:
+    headers:
+      Authorization:
+        type: string
+        description: the user has to be authorized to send request
+    queryParameters:
+      access_token:
+        description: user has to send valid token
+        type: string
+        required: false
+        
+    responses:
+      401:
+        body:
+          application/json:
+            example:
+              !include ../examples/responses/401.json
+              
+      403:
+        body:
+          application/json:
+            example:
+              !include ../examples/responses/403.json
+
+             
+        
+
+      

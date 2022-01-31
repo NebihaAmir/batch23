@@ -1,0 +1,50 @@
+#%RAML 1.0 Trait
+    headers:
+      Cookie:
+        type: string
+        required: false
+      responses:
+      '200':
+          description: Ok
+      '401':
+          description: Unauthorized
+      
+      connection-type:
+        description: multiple connection allowed
+        required: false
+      content-type:
+        displayName: content-type
+        description: json data
+        type: string
+        required: false
+      Authorization: 
+        type: integer
+        description: basic auth
+        required: false
+      session:
+        description: connection session is stored
+        type: string
+        required: false
+    queryParameters:
+      name:
+        type: string
+        description: The name of the product
+        minLength: 2
+        maxLength: 10
+        required: false
+        example: DELL
+      productId:
+        type: integer 
+        description: The id of the product
+        required: false
+        example: 234567
+      price:
+        type: integer
+        description: The price of the product
+        required: false
+        example: 250
+      categoryId:
+        type: integer
+        description: Id number assigned to the category
+        required: false
+        example: 5

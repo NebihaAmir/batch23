@@ -1,0 +1,24 @@
+#%RAML 1.0 Library
+usage: collection of API fragment files
+
+types:
+  userType: !include dataTypes/user.raml
+  productType: !include dataTypes/product.raml
+  orderType: !include dataTypes/order.raml
+  categoryType: !include dataTypes/category.raml
+  
+traits:
+  errorMsg: !include traits/errorResp_01.raml
+  errorMessage: !include traits/errorResp_02.raml
+  headers: !include traits/headerTrait.raml
+
+  
+securitySchemes:
+  Oauth: !include securitySchemas/oauth_1.0.raml
+  Basic_auth: !include securitySchemas/basic_auth.raml
+  
+resourceTypes:
+  postResp: !include resourceTypes/postResponse.raml
+  get_coll: !include resourceTypes/getCollection.raml
+  get_coll_item: !include resourceTypes/get_coll_item.raml
+  

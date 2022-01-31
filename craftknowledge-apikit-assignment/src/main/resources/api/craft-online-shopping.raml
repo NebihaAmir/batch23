@@ -1,0 +1,76 @@
+#%RAML 1.0
+title: craft-online-shopping
+description: Rest API Documentation
+uses:
+  lib: library.raml
+
+/users:
+  post:
+    body:
+      application/json:
+        type: lib.userType
+        example: !include examples/user.raml
+   
+  type:
+    lib.postResp:
+      exampleReference1: !include examples/responses/user_201.json
+  is:
+    - lib.errorMsg
+                                    
+/products:
+  get:
+  type:
+    lib.get_coll:
+      type: lib.productType[]
+      exampleReference2: !include examples/products.raml   
+  is:
+    - lib.errorMsg
+ 
+  /{product_id}:
+         
+    type:
+      lib.get_coll_item:
+        type: productType
+        exampleReference3: !include examples/product.raml
+          
+    is:
+      - lib.errorMsg
+/orders:
+  post:
+    body:
+      application/json:
+        type: lib.orderType
+        example: !include examples/order.raml
+     
+  type:
+    lib.postResp:
+      exampleReference1: !include examples/responses/order_201.json
+
+  is:
+    - lib.errorMessage
+/categories:
+  type:
+    lib.get_coll:
+      type: lib.categoryType[]
+      exampleReference2:  !include examples/categories.raml
+  is:
+    - lib.errorMsg  
+     
+  /{category_id}:    
+    type:
+      lib.get_coll_item:
+        type: lib.categoryType
+        exampleReference3: !include examples/category.raml
+      
+    is:
+      - lib.errorMsg              
+
+
+
+
+
+
+
+
+
+
